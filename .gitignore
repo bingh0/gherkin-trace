@@ -1,0 +1,15 @@
+node_modules/
+.gherkin-trace/
+
+# Emitted from JSDoc by `npm run build:types` (prepack) — the tarball
+# carries them; the repo stays source-only.
+types/
+
+# Confidential corpus label key — maps anonymized corpus labels used in
+# docs/field-runs/ to real project names. Never commit.
+*.local.md
+
+# The live dogfood report mines a real conversation journal (verbatim
+# excerpts, store paths) — each clone keeps its own. The committed,
+# journal-less specimen is docs/sample-report.md.
+gherkin-trace-report.md

@@ -1,0 +1,75 @@
+{
+  "name": "gherkin-trace",
+  "version": "0.1.0",
+  "description": "Traceability projection for agent-authored BDD corpora — joins feature files, binding status, and the conversation journal into one queryable picture of intent coverage, review provenance, and drift.",
+  "license": "MIT",
+  "author": "Bing Ho <reps-attic-riot@duck.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bingh0/gherkin-trace.git"
+  },
+  "homepage": "https://github.com/bingh0/gherkin-trace#readme",
+  "bugs": {
+    "url": "https://github.com/bingh0/gherkin-trace/issues"
+  },
+  "keywords": [
+    "gherkin",
+    "bdd",
+    "traceability",
+    "agent",
+    "claude-code",
+    "acceptance-criteria",
+    "review",
+    "drift"
+  ],
+  "type": "commonjs",
+  "main": "index.js",
+  "types": "./types/index.d.ts",
+  "bin": {
+    "gt": "./bin/gt.js",
+    "gherkin-trace": "./bin/gt.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "index.js",
+    "types/"
+  ],
+  "engines": {
+    "node": ">=22.17"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "build:types": "tsc index.js --declaration --emitDeclarationOnly --allowJs --checkJs false --skipLibCheck --module nodenext --moduleResolution nodenext --target es2022 --types node --outDir types",
+    "prepack": "npm run build:types"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.10.0"
+  },
+  "peerDependencies": {
+    "gherkin-node-test": ">=0.8.0",
+    "treecontext-mcp": "*",
+    "treecontext": "*"
+  },
+  "peerDependenciesMeta": {
+    "treecontext-mcp": {
+      "optional": true
+    },
+    "treecontext": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^24.0.0",
+    "gherkin-node-test": "^0.11.0",
+    "oxlint": "^1.0.0",
+    "treecontext": "npm:treecontext-mcp@^0.1.0-beta.1",
+    "typescript": "^5.5.0"
+  },
+  "allowScripts": {
+    "better-sqlite3": true
+  }
+}

@@ -1,0 +1,136 @@
+{"run-manifest":1}
+{"file":"features/answering-scripts.feature","title":"A degraded refresh is still an answer and exits zero","status":"passed"}
+{"file":"features/answering-scripts.feature","title":"A query on a broken picture is a refusal and exits two","status":"passed"}
+{"file":"features/answering-scripts.feature","title":"A refresh that builds the picture exits zero","status":"passed"}
+{"file":"features/answering-scripts.feature","title":"A refresh that fails partway exits one","status":"passed"}
+{"file":"features/answering-scripts.feature","title":"A refusal exits two and touches nothing","status":"passed"}
+{"file":"features/answering-scripts.feature","title":"A usage error is a refusal, never a failure","status":"passed"}
+{"file":"features/answering-scripts.feature","title":"Asking for help never runs a refresh","status":"passed"}
+{"file":"features/answering-scripts.feature","title":"Queries and the report answer zero over a healthy picture","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A binding status source declaring an unknown format fails the refresh loudly","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A binding status source that declares its format is read","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A crashed refresh leaves the picture marked broken","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A declared binding status source is joined from its own location","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A huge corpus refreshes without size policing","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A journal named without treecontext installed degrades the picture loudly","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A missing journal degrades the picture loudly","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A query before the first refresh is refused with directions","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A refresh links the three sources into one picture","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A request to edit a feature file to fix an orphan is refused naming its owner [1]","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A request to mark a scenario as reviewed is refused naming its owner [3]","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A request to write a note into the journal is refused naming its owner [2]","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A scenario the runner never saw is flagged, never blank","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A second refresh during a running refresh is refused","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"An empty corpus is a true stated state","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"An unparseable feature file becomes a named exception","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"Deleting the picture and refreshing rebuilds it identically","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"Missing binding status degrades the picture loudly","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"Missing feature files refuse a refresh","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"Sources are read and never modified","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"A corpus with a design tier keeps per-scenario refinement ranking","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"A corpus with no design tier is one fact, not a flood","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"A fourth saturated title crosses into collapse","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"A quarantined design tier is a parse problem, never tier absence","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"Corpus-wide provenance saturation is one condition, not hundreds of notes","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"Mass quarantine is rolled up by cause","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"The report states corpus conditions in their own census","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"Three quarantined files stay itemized","status":"passed"}
+{"file":"features/collapsing-corpus-conditions.feature","title":"Three saturated titles stay itemized","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"A flat distribution withholds heat classification","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"A region is presented in terms a reader can recognize","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"An uncaptured region is presented from its discussion alone","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"Discussion outliving the last spec change reads as contested","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"Heavy discussion ended by a spec change reads as settled","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"Heavy discussion with no scenarios reads as uncaptured","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"Heavy is cut at the natural break in discussion density","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"Little discussion and little spec reads as unexamined","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"Little discussion around a lapsed review never reads as quiet","status":"passed"}
+{"file":"features/conversation-heat.feature","title":"Little discussion around a stable reviewed spec reads as quiet","status":"passed"}
+{"file":"features/dilution.feature","title":"A clean scenario still receives its full timeline","status":"passed"}
+{"file":"features/dilution.feature","title":"A confirmation never outranks a contested region","status":"passed"}
+{"file":"features/dilution.feature","title":"A confirmation retires at the scenario's next recorded verdict","status":"passed"}
+{"file":"features/dilution.feature","title":"A declared edit carries pointers to its discussion","status":"passed"}
+{"file":"features/dilution.feature","title":"A declared edit outranks a never-run scenario","status":"passed"}
+{"file":"features/dilution.feature","title":"A deletion confirmation retires at the corpus's next recorded run","status":"passed"}
+{"file":"features/dilution.feature","title":"A growing assertion count is never a mass signal","status":"passed"}
+{"file":"features/dilution.feature","title":"A quiet edit is flagged as changed without traced discussion","status":"passed"}
+{"file":"features/dilution.feature","title":"A retitle in a shedding commit does not restart the series","status":"passed"}
+{"file":"features/dilution.feature","title":"A reviewed scenario deleted without sanction is a quiet removal","status":"passed"}
+{"file":"features/dilution.feature","title":"A sanction entry is itself review provenance","status":"passed"}
+{"file":"features/dilution.feature","title":"A sanction entry without a direction is malformed","status":"passed"}
+{"file":"features/dilution.feature","title":"A sanction violation ranks with breaches","status":"passed"}
+{"file":"features/dilution.feature","title":"A sanctioned deletion is spent at the thread end","status":"passed"}
+{"file":"features/dilution.feature","title":"A sanctioned in-direction edit consumes its entry as a confirmation","status":"passed"}
+{"file":"features/dilution.feature","title":"A span crossing truncated history is never guessed","status":"passed"}
+{"file":"features/dilution.feature","title":"A spent sanction covers nothing further","status":"passed"}
+{"file":"features/dilution.feature","title":"A timeline asked for an unknown title is a refusal","status":"passed"}
+{"file":"features/dilution.feature","title":"An edit covered by one of several live sanctions confirms exactly once","status":"passed"}
+{"file":"features/dilution.feature","title":"An edit outside every live sanction's direction is a violation","status":"passed"}
+{"file":"features/dilution.feature","title":"An unsanctioned edit coupled to a verdict flip is sighted","status":"passed"}
+{"file":"features/dilution.feature","title":"An untouched sanction stands as an unconsumed notice","status":"passed"}
+{"file":"features/dilution.feature","title":"Deleting Examples rows sheds assertion mass","status":"passed"}
+{"file":"features/dilution.feature","title":"Deleting an unconsumed entry retires its notice","status":"passed"}
+{"file":"features/dilution.feature","title":"Dilution shapes rank in defiance order","status":"passed"}
+{"file":"features/dilution.feature","title":"Missing change history leaves dilution signals dark and named","status":"passed"}
+{"file":"features/dilution.feature","title":"Shedding assertions under green is sighted with its count series","status":"passed"}
+{"file":"features/dilution.feature","title":"The dilution timeline lays out a sighted scenario's history in dated order","status":"passed"}
+{"file":"features/reporting-to-the-human.feature","title":"A refresh over unchanged sources changes only the stated refresh time","status":"passed"}
+{"file":"features/reporting-to-the-human.feature","title":"No report comes from a failed refresh","status":"passed"}
+{"file":"features/reporting-to-the-human.feature","title":"Re-emitting over an unchanged picture is byte-identical","status":"passed"}
+{"file":"features/reporting-to-the-human.feature","title":"The report carries the review and coverage state","status":"passed"}
+{"file":"features/reporting-to-the-human.feature","title":"The report opens with the attention list","status":"passed"}
+{"file":"features/reporting-to-the-human.feature","title":"The report states its inputs","status":"passed"}
+{"file":"features/reporting-to-the-human.feature","title":"The report's attention section matches the attention list answer","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"A fence in both places reads from beside the features and names the shadowed root","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"A harness notification never rings the reconsider bell","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"A missing fence file leaves fence signals dark and named","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"A named guardian is cited, never a breach","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"A reaffirmed ruling clears fence-under-pressure","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"A scenario inside fenced territory reads as a breach","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"A scenario predating the fence ruling still reads as a breach","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"An arguable match reads as a breach candidate","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"Fenced silence cites the ruling","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"The fence is found beside the feature files first","status":"passed"}
+{"file":"features/respecting-the-fence.feature","title":"User discussion after the ruling reads as fence-under-pressure","status":"passed"}
+{"file":"features/review-provenance.feature","title":"A harness notification is never ruling evidence","status":"passed"}
+{"file":"features/review-provenance.feature","title":"Ambiguous ruling evidence surfaces as a candidate, not a review","status":"passed"}
+{"file":"features/review-provenance.feature","title":"Review expires when the body changes after the ruling","status":"passed"}
+{"file":"features/review-provenance.feature","title":"Reviewed status comes from mined ruling evidence","status":"passed"}
+{"file":"features/review-provenance.feature","title":"The invariant check names the scenario that breaks intent coverage","status":"passed"}
+{"file":"features/review-provenance.feature","title":"The invariant check reports a complete reviewed set","status":"passed"}
+{"file":"features/review-provenance.feature","title":"The latest of conflicting rulings decides reviewed status","status":"passed"}
+{"file":"features/review-provenance.feature","title":"Unestablishable order falls to reviewed-then-changed","status":"passed"}
+{"file":"features/routing-attention.feature","title":"A never-run scenario outranks an orphan","status":"passed"}
+{"file":"features/routing-attention.feature","title":"A signal pile-up appears once at its top tier with all evidence","status":"passed"}
+{"file":"features/routing-attention.feature","title":"An empty list means empty","status":"passed"}
+{"file":"features/routing-attention.feature","title":"An empty list names what it could not see","status":"passed"}
+{"file":"features/routing-attention.feature","title":"Equal-rank items order deterministically","status":"passed"}
+{"file":"features/routing-attention.feature","title":"Exception overflow is grouped, never truncated","status":"passed"}
+{"file":"features/routing-attention.feature","title":"One ranked list with evidence per item","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"A dark signal family is a dark row, never a clear one","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"A degraded picture cannot look healthy at a glance","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"A failed refresh poisons the blob loudly","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"A reader never observes a half-written blob","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"A refresh writes the sidecar blob beside the refresh record","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"A refused refresh leaves the blob untouched","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"Before the first refresh there is no blob at all","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"Rewriting over unchanged sources changes only the stated refresh time","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"Suppressed refinement ranking darkens the attention row","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"The blob carries what the report carries, from the same picture","status":"passed"}
+{"file":"features/sidecar-blob.feature","title":"Withheld heat is a dark row, not a missing one","status":"passed"}
+{"file":"features/surviving-renames.feature","title":"A user ruling confirming a rename heals the broken thread","status":"passed"}
+{"file":"features/surviving-renames.feature","title":"An unconfirmable rename breaks visibly with candidates","status":"passed"}
+{"file":"features/surviving-renames.feature","title":"Deleting a reviewed scenario is reported, never silent","status":"passed"}
+{"file":"features/surviving-renames.feature","title":"Links survive a move and a retitle","status":"passed"}
+{"file":"features/surviving-renames.feature","title":"Review survives a pure rename","status":"passed"}
+{"file":"features/surviving-renames.feature","title":"The former title stays visible in history","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"A downward lookup at the design tier reorients the asker [2]","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"A downward lookup lists refinements with binding status","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"A lookup miss returns near matches and freshness","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"A upward lookup at the UAT tier reorients the asker [1]","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"An empty neighborhood names each absence","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"An orphan neighborhood offers candidate parents with evidence","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"An upward lookup names the intent behind a design scenario","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"Every trace answer carries freshness","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"The exception view lists orphans and unrefined intent","status":"passed"}
+{"file":"features/tracing-intent.feature","title":"The neighborhood view gathers everything around a scenario","status":"passed"}

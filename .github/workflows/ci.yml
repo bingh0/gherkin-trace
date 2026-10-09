@@ -1,0 +1,69 @@
+# treecontext comes from the registry (treecontext-mcp, installed as the
+# devDependency `treecontext`), so CI is a plain checkout + npm ci. The three
+# Linux lanes span the Node floor to current; the macOS and Windows lanes are
+# here because better-sqlite3 is a native build and what consumers install is
+# the packed tarball — source passing on Linux is not the artifact working
+# elsewhere, so every lane ends by installing and running the tarball.
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+# A superseded run's minutes buy nothing — cancel it when a newer push arrives.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, node ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ['22.x', '24.x', '26.x']
+        include:
+          - os: macos-latest
+            node-version: '24.x'
+          - os: windows-latest
+            node-version: '24.x'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      # Under npm 12 the better-sqlite3 install script is approved by this
+      # package.json's allowScripts; older npm runs it unasked.
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+      - run: npm run typecheck
+
+      # The artifact, not the source: pack, install the tarball into a fresh
+      # consumer project beside its required peer, and run the installed
+      # binary. The consumer's package.json approves better-sqlite3's build the
+      # way a real consumer under npm 12 has to.
+      - name: Smoke the packed tarball
+        shell: bash
+        run: |
+          set -euo pipefail
+          tgz="$(npm pack --silent)"
+          smoke="$RUNNER_TEMP/gt-smoke"
+          mkdir -p "$smoke"
+          printf '{"name":"gt-smoke","private":true,"allowScripts":{"better-sqlite3":true}}\n' > "$smoke/package.json"
+          (cd "$smoke" && npm install --no-audit --no-fund "$GITHUB_WORKSPACE/$tgz" gherkin-node-test)
+          gt="$smoke/node_modules/.bin/gherkin-trace"
+          "$gt" --version
+          "$gt" refresh --root "$GITHUB_WORKSPACE"
+          "$gt" report --root "$GITHUB_WORKSPACE" | head -20
