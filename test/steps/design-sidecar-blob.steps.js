@@ -242,7 +242,13 @@ module.exports = (reg) => {
   });
 
   define(/^the blob's directory is created owner-only$/, (w) => {
-    const mode = fs.statSync(path.join(w.dir, '.gherkin-trace')).mode & 0o777;
+    const st = fs.statSync(path.join(w.dir, '.gherkin-trace'));
+    // Owner-only is expressed through POSIX mode bits. Windows carries none
+    // (stat reports a synthetic 0o666 for every directory, and chmod toggles
+    // only the read-only attribute), so there the step can witness only that
+    // the directory exists; the mode assertion is a Unix fact.
+    if (process.platform === 'win32') return assert.ok(st.isDirectory());
+    const mode = st.mode & 0o777;
     assert.strictEqual(mode, 0o700, `dir mode is ${mode.toString(8)}`);
   });
 
