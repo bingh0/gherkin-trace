@@ -6,8 +6,28 @@ const path = require('node:path');
 /** The error code openJournal throws when no treecontext name resolves. */
 const TREECONTEXT_MISSING = 'GT_TREECONTEXT_MISSING';
 
+/**
+ * The error code openJournal throws when treecontext resolves but predates
+ * its node:sqlite door (treecontext-mcp 0.1.0-beta.3): the persistence
+ * export exists and has no openNodeSqlite. A peer version floor alone cannot
+ * catch this — a sibling checkout carries whatever version string its
+ * manifest last said — so the door is checked for the function itself.
+ */
+const TREECONTEXT_TOO_OLD = 'GT_TREECONTEXT_TOO_OLD';
+
+/** The release whose library door gt reads through. */
+const TREECONTEXT_FLOOR = '0.1.0-beta.3';
+
 /** The names tried, in order: the npm name, then the package/sibling name. */
 let treecontextNames = ['treecontext-mcp', 'treecontext'];
+
+/**
+ * The dynamic import itself, behind a seam: the suite stages a treecontext
+ * older than the door by answering the persistence import with a beta.1
+ * shape, which no installed package can be made to do.
+ * @type {(specifier: string) => Promise<any>}
+ */
+let importTreecontext = (specifier) => import(specifier);
 
 /**
  * Test seam: point the loader at other names (the suite runs with
@@ -22,17 +42,41 @@ function setTreecontextNames(names) {
 }
 
 /**
+ * Test seam: replace the importer. Returns the previous one so the caller
+ * can restore it.
+ * @param {(specifier: string) => Promise<any>} importer
+ * @returns {(specifier: string) => Promise<any>}
+ */
+function setTreecontextImporter(importer) {
+  const previous = importTreecontext;
+  importTreecontext = importer;
+  return previous;
+}
+
+/**
  * Import treecontext under the first installed name. When none resolves,
  * throw an error carrying TREECONTEXT_MISSING and the install teaching —
  * the caller treats it as an absent source, not a broken picture (ruled
- * 2026-10-08). Any other error still throws as itself.
+ * 2026-10-08). When one resolves but its persistence door predates
+ * openNodeSqlite, throw TREECONTEXT_TOO_OLD with the upgrade teaching —
+ * the same absent-source treatment. Any other error still throws as itself.
+ * @returns {Promise<{ openNodeSqlite: (path: string) => import('treecontext').Database, FlatStore: typeof import('treecontext').FlatStore }>}
  */
 async function loadTreecontext() {
   let lastError;
   for (const name of treecontextNames) {
     try {
-      const [{ wrapBetterSqlite }, { FlatStore }] = await Promise.all([import(`${name}/persistence/node`), import(name)]);
-      return { wrapBetterSqlite, FlatStore };
+      const [door, { FlatStore }] = await Promise.all([
+        importTreecontext(`${name}/persistence/node`), importTreecontext(name)]);
+      if (typeof door.openNodeSqlite !== 'function') {
+        const tooOld = /** @type {Error & {code?: string}} */ (new Error(
+          `treecontext is installed as ${name} but is too old to read the journal (no node:sqlite door; `
+          + `gherkin-trace needs treecontext-mcp >= ${TREECONTEXT_FLOOR}) — journal mining is dark; `
+          + 'upgrade it beside gherkin-trace: npm install --save-dev treecontext-mcp@latest'));
+        tooOld.code = TREECONTEXT_TOO_OLD;
+        throw tooOld;
+      }
+      return { openNodeSqlite: door.openNodeSqlite, FlatStore };
     } catch (e) {
       const code = /** @type {NodeJS.ErrnoException} */ (e).code;
       if (code !== 'ERR_MODULE_NOT_FOUND' && code !== 'MODULE_NOT_FOUND' && code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') throw e;
@@ -61,7 +105,9 @@ async function loadTreecontext() {
  * between copy and query.
  *
  * treecontext ships ESM; gt is CommonJS. The dynamic import is the seam,
- * kept in this one file.
+ * kept in this one file. The snapshot is opened through treecontext's own
+ * door (openNodeSqlite, node:sqlite underneath), which owns the handle:
+ * gt never holds a raw SQLite handle on a journal.
  *
  * @typedef {import('treecontext').QueryResult} JournalHit
  * @typedef {{
@@ -93,15 +139,18 @@ async function openJournal(dbPath, namespace) {
     const wal = fs.existsSync(snap + '-wal') ? fs.readFileSync(snap + '-wal') : Buffer.alloc(0);
     const hash = sha256(Buffer.concat([fs.readFileSync(snap), wal]));
 
-    const BetterSqlite3 = require('better-sqlite3');
-    const raw = new BetterSqlite3(snap);
+    // treecontext is resolved by whichever name it is installed under: its
+    // npm name is treecontext-mcp, its package and sibling-checkout name
+    // treecontext. The first that resolves wins; neither resolving throws
+    // TREECONTEXT_MISSING, and one too old to carry the door throws
+    // TREECONTEXT_TOO_OLD — both of which the refresh names as an absent
+    // journal. Resolved before anything is opened, so nothing leaks.
+    const { openNodeSqlite, FlatStore } = await loadTreecontext();
+    // The door opens the snapshot read-write and applies treecontext's own
+    // pragmas and file mode to it — fine, the hash above already attests to
+    // the bytes, and the copy is thrown away after the query.
+    const database = openNodeSqlite(snap);
     try {
-      // treecontext is resolved by whichever name it is installed under: its
-      // npm name is treecontext-mcp, its package and sibling-checkout name
-      // treecontext. The first that resolves wins; neither resolving throws
-      // TREECONTEXT_MISSING, which the refresh names as an absent journal.
-      const { wrapBetterSqlite, FlatStore } = await loadTreecontext();
-      const database = wrapBetterSqlite(raw);
       // The snapshot is a throwaway copy, so treecontext may migrate IT
       // freely to its current schema — the source store is never touched
       // (first dogfood run: a live store pending a destructive migration
@@ -128,7 +177,7 @@ async function openJournal(dbPath, namespace) {
         totalNodes: store.status().totalNodes,
       };
     } catch (e) {
-      raw.close();
+      database.close();
       throw e;
     }
   } catch (e) {
@@ -137,4 +186,7 @@ async function openJournal(dbPath, namespace) {
   }
 }
 
-module.exports = { openJournal, setTreecontextNames, TREECONTEXT_MISSING };
+module.exports = {
+  openJournal, setTreecontextNames, setTreecontextImporter,
+  TREECONTEXT_MISSING, TREECONTEXT_TOO_OLD, TREECONTEXT_FLOOR,
+};

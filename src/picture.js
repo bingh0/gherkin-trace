@@ -1,7 +1,9 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
-const BetterSqlite3 = require('better-sqlite3');
+// Node's built-in SQLite (Node >= 24.16): no native build, the SQLite the
+// running Node carries — the same driver treecontext reads its store with.
+const { DatabaseSync } = require('node:sqlite');
 const { canonJson, compareCodePoints } = require('./util');
 const { readState, picturePath } = require('./state');
 const { GtRefusal } = require('./errors');
@@ -49,17 +51,21 @@ function buildPicture(pictureDir, model) {
   const edges = [...model.edges].sort((a, b) =>
     compareCodePoints(a.cls, b.cls) || compareCodePoints(a.src, b.src) || compareCodePoints(a.dst, b.dst));
 
-  const db = new BetterSqlite3(tmp);
+  const db = new DatabaseSync(tmp);
   let built = false;
   try {
-    db.pragma('journal_mode = DELETE');
+    db.exec('PRAGMA journal_mode = DELETE');
     db.exec(SCHEMA);
     const insNode = db.prepare('INSERT INTO node (kind, key, data) VALUES (?, ?, ?)');
     const insEdge = db.prepare('INSERT INTO edge (src, dst, class, data) VALUES (?, ?, ?, ?)');
     const insMeta = db.prepare('INSERT INTO meta (key, value) VALUES (?, ?)');
     /** @type {Map<string, number | bigint>} */
     const ids = new Map();
-    db.transaction(() => {
+    // One transaction for the whole build: node:sqlite has no transaction
+    // wrapper, so the bracket is explicit. Foreign keys are on by default
+    // under node:sqlite; edges insert after the nodes they reference.
+    db.exec('BEGIN');
+    try {
       for (const n of nodes) {
         const r = insNode.run(n.kind, n.key, canonJson(n.data));
         ids.set(n.key, r.lastInsertRowid);
@@ -75,7 +81,11 @@ function buildPicture(pictureDir, model) {
       for (const key of Object.keys(model.meta).sort(compareCodePoints)) {
         insMeta.run(key, canonJson(model.meta[key]));
       }
-    })();
+      db.exec('COMMIT');
+    } catch (e) {
+      if (db.isTransaction) db.exec('ROLLBACK');
+      throw e;
+    }
     built = true;
   } finally {
     db.close();
@@ -107,7 +117,7 @@ function fsyncDir(dir) {
  * Open the picture for a query, or refuse with directions. Refusal wording
  * is contract: it always says what restores answers, never serves silence.
  * @param {string} pictureDir
- * @returns {{ db: import('better-sqlite3').Database, refresh: Record<string, unknown> }}
+ * @returns {{ db: import('node:sqlite').DatabaseSync, refresh: Record<string, unknown> }}
  */
 function openForQuery(pictureDir) {
   let state = readState(pictureDir);
@@ -127,7 +137,9 @@ function openForQuery(pictureDir) {
   // another's provenance — retry once (the swap has settled), then refuse.
   for (let attempt = 0; ; attempt++) {
     const refresh = /** @type {Record<string, unknown>} */ (state.refresh);
-    const db = new BetterSqlite3(picturePath(pictureDir), { readonly: true, fileMustExist: true });
+    // Read-only implies must-exist: a missing picture.db throws SQLITE_CANTOPEN
+    // rather than creating an empty file under a query.
+    const db = new DatabaseSync(picturePath(pictureDir), { readOnly: true });
     const row = /** @type {{value: string} | undefined} */ (
       db.prepare("SELECT value FROM meta WHERE key = 'generation'").get());
     const generation = row === undefined ? undefined : JSON.parse(row.value);

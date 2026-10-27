@@ -4,7 +4,7 @@ const path = require('node:path');
 const { parseFeature } = require('gherkin-node-test');
 const { resolveSources } = require('./sources');
 const { readManifest } = require('./manifest');
-const { openJournal, TREECONTEXT_MISSING } = require('./journal');
+const { openJournal, TREECONTEXT_MISSING, TREECONTEXT_TOO_OLD } = require('./journal');
 const { buildPicture } = require('./picture');
 const { collectHistory, outlineBase } = require('./history');
 const { resolveRefinements } = require('./refine');
@@ -292,12 +292,14 @@ async function runRefresh(src, refreshedAt) {
   /** @type {Set<string>} */
   const saturatedTitles = new Set();
   // A store named but unreadable because the peer that reads it is not
-  // installed is an absent source, not a broken picture (ruled 2026-10-08):
-  // the picture builds from the rest, the journal is named absent with the
-  // install teaching, and its signal families go dark.
+  // installed, or is too old to carry the door gt reads through, is an
+  // absent source, not a broken picture (ruled 2026-10-08): the picture
+  // builds from the rest, the journal is named absent with the install or
+  // upgrade teaching, and its signal families go dark.
   const journal = src.journal === null ? null
     : await openJournal(src.journal, src.journalNamespace).catch((e) => {
-      if (/** @type {{code?: string}} */ (e).code !== TREECONTEXT_MISSING) throw e;
+      const code = /** @type {{code?: string}} */ (e).code;
+      if (code !== TREECONTEXT_MISSING && code !== TREECONTEXT_TOO_OLD) throw e;
       notes.push(`journal ${relToRoot(src.root, /** @type {string} */ (src.journal))} named but not read: `
         + (e instanceof Error ? e.message : String(e)));
       return null;

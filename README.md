@@ -60,13 +60,17 @@ reads:
 npm install --save-dev gherkin-trace gherkin-node-test
 ```
 
-Node >= 22.17 (the floor gherkin-node-test >= 0.10 sets).
-`gherkin-node-test >= 0.8.0` is a required peer. treecontext is an
-optional peer — without it, journal mining is dark and the report says so.
-To light it up, install it into the **same project** so gt can resolve it
-by name; a global install does not make it resolvable from the project.
-gt looks for it as `treecontext-mcp` (its npm name) first, then as
-`treecontext` (its package name, which a sibling checkout links as):
+Node >= 24.16. gt's SQLite is Node's built-in `node:sqlite`, so there is
+no native dependency and nothing to build or approve at install; Node 22
+ships that module with a warning on every load and an older API, hence
+the floor. `gherkin-node-test >= 0.8.0` is a required peer. treecontext
+is an optional peer — without it, journal mining is dark and the report
+says so. To light it up, install `treecontext-mcp >= 0.1.0-beta.3` (the
+release whose library door is node:sqlite) into the **same project** so
+gt can resolve it by name; a global install does not make it resolvable
+from the project. gt looks for it as `treecontext-mcp` (its npm name)
+first, then as `treecontext` (its package name, which a sibling checkout
+links as):
 
 ```sh
 npm install --save-dev treecontext-mcp
@@ -74,21 +78,9 @@ npm install --save-dev treecontext-mcp
 
 Passing `--journal` before it is installed does not break the picture:
 the refresh builds without it, names the journal absent with the install
-hint in its notes, and the journal's signal families stay dark.
-
-**npm 12 and later block dependency install scripts by default.** gt
-depends on `better-sqlite3`, whose native build runs as an install
-script; blocked, every gt command fails with `Could not locate the
-bindings file`. Approve it once per project, then rebuild if it was
-already installed:
-
-```sh
-npm install-scripts approve better-sqlite3
-npm rebuild better-sqlite3
-```
-
-(treecontext installed from a git source needs the same approval for its
-`prepare` build.)
+hint in its notes, and the journal's signal families stay dark. An
+installed treecontext older than beta.3 is treated the same way: the
+refresh names the journal absent with the upgrade hint.
 
 Two commands are installed, `gt` and `gherkin-trace`, both the same
 program. If another tool already owns `gt` on your PATH (the Graphite CLI
@@ -115,11 +107,8 @@ sibling checkout links as. To develop against a local treecontext checkout
 instead, build it, then link it over the registry copy for the session:
 
 ```sh
-npm install --no-save ../treecontext
+npm install --no-save ../treecontext-mcp
 ```
-
-Under npm 12 `npm ci` is subject to the install-script block; gt's own
-`package.json` already approves `better-sqlite3` for its checkout.
 
 Scope-built fences are found automatically: gt probes
 `features/OUT-OF-SCOPE.md` (the scoping contract's canonical location)

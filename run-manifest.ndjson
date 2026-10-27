@@ -12,6 +12,7 @@
 {"file":"features/building-the-picture.feature","title":"A crashed refresh leaves the picture marked broken","status":"passed"}
 {"file":"features/building-the-picture.feature","title":"A declared binding status source is joined from its own location","status":"passed"}
 {"file":"features/building-the-picture.feature","title":"A huge corpus refreshes without size policing","status":"passed"}
+{"file":"features/building-the-picture.feature","title":"A journal named with a treecontext too old to read it degrades the picture loudly","status":"passed"}
 {"file":"features/building-the-picture.feature","title":"A journal named without treecontext installed degrades the picture loudly","status":"passed"}
 {"file":"features/building-the-picture.feature","title":"A missing journal degrades the picture loudly","status":"passed"}
 {"file":"features/building-the-picture.feature","title":"A query before the first refresh is refused with directions","status":"passed"}

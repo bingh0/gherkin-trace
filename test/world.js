@@ -102,14 +102,12 @@ async function writeJournal(w, extra = []) {
  */
 async function createJournalStore(w, entries) {
   project(w);
-  const BetterSqlite3 = require('better-sqlite3');
-  const { wrapBetterSqlite } = await import('treecontext/persistence/node');
+  const { openNodeSqlite } = await import('treecontext/persistence/node');
   const { FlatStore } = await import('treecontext');
   const dir = path.join(w.dir, 'journal');
   fs.mkdirSync(dir, { recursive: true });
   w.journalPath = path.join(dir, 'treecontext.db');
-  const raw = new BetterSqlite3(w.journalPath);
-  const database = wrapBetterSqlite(raw);
+  const database = openNodeSqlite(w.journalPath);
   const store = await FlatStore.open({ database, namespace: 'project' });
   for (const e of entries) {
     await store.insert(e.content, {
@@ -129,11 +127,9 @@ async function createJournalStore(w, entries) {
  * @param {Array<{content: string, role?: string, sessionId?: string, createdAt?: number}>} entries
  */
 async function addJournalEntries(w, entries) {
-  const BetterSqlite3 = require('better-sqlite3');
-  const { wrapBetterSqlite } = await import('treecontext/persistence/node');
+  const { openNodeSqlite } = await import('treecontext/persistence/node');
   const { FlatStore } = await import('treecontext');
-  const raw = new BetterSqlite3(w.journalPath);
-  const database = wrapBetterSqlite(raw);
+  const database = openNodeSqlite(w.journalPath);
   const store = await FlatStore.open({ database, namespace: 'project' });
   for (const e of entries) {
     await store.insert(e.content, {

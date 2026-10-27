@@ -270,6 +270,27 @@ module.exports = (reg) => {
       `notes do not teach the install: ${JSON.stringify(w.result.notes)}`);
   });
 
+  define(/^the treecontext installed beside gherkin-trace predates its node:sqlite door$/, (w) => {
+    // No installed package can be made older than itself: stage a beta.1-
+    // shaped treecontext by answering the persistence import with a door
+    // that has wrapBetterSqlite and no openNodeSqlite, the real package
+    // for everything else. Restore the real importer after the scenario.
+    const previous = journal.setTreecontextImporter((specifier) =>
+      specifier.endsWith('/persistence/node')
+        ? Promise.resolve({ wrapBetterSqlite() {} })
+        : import(specifier));
+    w.defer(() => journal.setTreecontextImporter(previous));
+  });
+
+  define(/^the report names the journal as absent and says treecontext is too old$/, (w) => {
+    assert.ok(w.result, `refresh failed: ${w.error}`);
+    assert.ok(w.result.absent.includes('journal'));
+    assert.strictEqual(w.result.sources.journal, null);
+    assert.ok(w.result.notes.some((/** @type {string} */ n) =>
+      n.includes('too old') && n.includes(journal.TREECONTEXT_FLOOR) && n.includes('treecontext-mcp')),
+      `notes do not teach the upgrade: ${JSON.stringify(w.result.notes)}`);
+  });
+
   define(/^the report names binding status as absent$/, (w) => {
     assert.ok(w.result.absent.includes('binding status'));
   });

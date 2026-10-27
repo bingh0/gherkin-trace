@@ -4,6 +4,34 @@
 guarantee in either direction between beta releases. 0.0.x was the
 private beta line.
 
+## 0.2.0 (unreleased — ships together with treecontext-mcp 0.1.0-beta.3)
+
+- **The SQLite driver is Node's built-in `node:sqlite`; there is no native
+  dependency.** `better-sqlite3` and `@types/better-sqlite3` are gone, and
+  with them the install script npm 12 asks every consumer to approve (a
+  global install used to fail on it), the README's approve-and-rebuild
+  section, and gt's own `allowScripts`. The picture database and the
+  journal snapshot both open through node:sqlite; the picture's contents
+  and order are unchanged (the schema stores text only, rows sort and
+  serialize as before), and its bytes now follow the SQLite the running
+  Node carries rather than a bundled one. treecontext-mcp 0.1.0-beta.3 made the same move, and its library
+  door changed with it: `openNodeSqlite(path)` replaces
+  `wrapBetterSqlite(raw)`, so gt no longer holds a raw handle on a journal
+  snapshot — treecontext opens and owns it.
+  - **Node floor `>= 24.16`** (was 22.17). Node 22's `node:sqlite` warns on
+    every load and has an older API; 24.16 is also treecontext's floor.
+  - **treecontext floor `>= 0.1.0-beta.3`**, declared on both optional peer
+    names. A version floor alone cannot catch a stale sibling checkout, so
+    the journal seam also checks the door for `openNodeSqlite` itself: a
+    treecontext that resolves but predates it is an absent source like a
+    missing one (the 2026-10-08 ruling extended) — the refresh builds from
+    the other sources, names the journal absent with the upgrade teaching
+    in its notes, and heat, provenance, and review status go dark. Against
+    0.1.0 that case threw `wrapBetterSqlite is not a function` and refused
+    every query after. New scenario in `building-the-picture.feature`.
+  - CI: the Node 22 lane is replaced by an exact 24.16.0 lane so the floor
+    is witnessed; the tarball smoke no longer approves any install script.
+
 ## 0.1.0 (public beta)
 
 - **treecontext from the registry for development too.** The suite's

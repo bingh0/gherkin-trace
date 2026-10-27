@@ -36,6 +36,14 @@ Feature: Building the picture
     And the report names the journal as absent and says treecontext is not installed
     And the report names heat, provenance, and review status as dark
 
+  Scenario: A journal named with a treecontext too old to read it degrades the picture loudly
+    Given a project with 3 feature files, binding status, and a journal
+    And the treecontext installed beside gherkin-trace predates its node:sqlite door
+    When a refresh runs
+    Then the picture is built from the feature files and binding status
+    And the report names the journal as absent and says treecontext is too old
+    And the report names heat, provenance, and review status as dark
+
   Scenario: Missing binding status degrades the picture loudly
     Given a project with feature files and a journal but no binding status
     When a refresh runs
