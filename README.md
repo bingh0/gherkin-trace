@@ -49,6 +49,13 @@ intent itself is thin. Without the link, tiers are just folders.
 
 gherkin-trace knows both substrates; they never know about it or each other.
 
+The lie each tool polices has an address on the aBDD
+[failure ladder](https://github.com/bingh0/gherkin-node-test/blob/main/docs/failure-ladder.md): mechanical rot is the runner's floor, `cino:spec`
+(green because the scenario was weakened — a temporal fact only history
+shows) is the rung this tool's picture exists to sight, and `cino:decision`
+is why the journal is read. One canonical copy of the ladder; this README
+links and does not restate it.
+
 ## Use
 
 ### Install
